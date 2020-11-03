@@ -1,8 +1,9 @@
 extends Node2D
 
-var chunk_size    : Vector2
-var chunks_filled : Dictionary
-var dirt_tiles    : Array
+var chunk_size     : Vector2
+var chunks_filled  : Dictionary
+var ground_tiles   : Array
+var resource_tiles : Array
 
 var controls_enabled : bool                  = true
 var move_speed       : int                   = 300
@@ -10,8 +11,9 @@ var movement         : Vector2               = Vector2(0, 0)
 var rng              : RandomNumberGenerator = RandomNumberGenerator.new()
 var sqrt_half        : float                 = sqrt(0.5)
 
-onready var camera  : Camera2D = get_node("Camera2D")
-onready var tilemap : TileMap  = get_node("TileMap")
+onready var camera    : Camera2D = get_node("Camera2D")
+onready var ground    : TileMap  = get_node("Ground")
+onready var resources : TileMap  = get_node("Resources")
 
 
 func _input(event):
@@ -87,13 +89,8 @@ func _ready():
 	rng.randomize()
 	
 	# Set up tiles
-	var tileset = tilemap.tile_set
-
-	dirt_tiles = [
-		tileset.find_tile_by_name("dirt1"),
-		tileset.find_tile_by_name("dirt2"),
-		tileset.find_tile_by_name("dirt3")
-	]
+	ground_tiles   = ground.tile_set.get_tiles_ids()
+	resource_tiles = resources.tile_set.get_tiles_ids()
 	
 	# Set up chunks
 	chunk_size = Vector2(20, 20)
@@ -111,11 +108,11 @@ func enable_controls():
 
 func ensure_chunks_filled():
 	var camera_chunk_location = Vector2(
-		floor((camera.position.x / tilemap.cell_size.x) / chunk_size.x),
-		floor((camera.position.y / tilemap.cell_size.y) / chunk_size.y)
+		floor((camera.position.x / ground.cell_size.x) / chunk_size.x),
+		floor((camera.position.y / ground.cell_size.y) / chunk_size.y)
 	)
 	
-	var viewport_size = get_viewport().size / tilemap.cell_size
+	var viewport_size = get_viewport().size / ground.cell_size
 	
 	var x_chunks_per_viewport = ceil(viewport_size.x / chunk_size.x)
 	var y_chunks_per_viewport = ceil(viewport_size.y / chunk_size.y)
@@ -129,14 +126,19 @@ func ensure_chunks_filled():
 
 		for chunk_y in range (camera_chunk_location.y - y_chunks_per_viewport, camera_chunk_location.y + y_chunks_per_viewport + 1):
 			if !x_chunks_filled.get(chunk_y):
-				generate_tiles(chunk_x, chunk_y)
+				generate_chunk(chunk_x, chunk_y)
 				x_chunks_filled[chunk_y] = true
 
 
-func generate_tiles(chunk_x, chunk_y):
+func generate_chunk(chunk_x, chunk_y):
 	var start_x = chunk_x * chunk_size.x
 	var start_y = chunk_y * chunk_size.y
 	
 	for x in range(start_x, start_x + chunk_size.x):
 		for y in range(start_y, start_y + chunk_size.y):
-			tilemap.set_cell(x, y, dirt_tiles[rng.randi_range(0, 2)])
+			# Add a ground tile
+			ground.set_cell(x, y, ground_tiles[rng.randi_range(0, ground_tiles.size() - 1)])
+			
+			# Determine if a resource should be set (hard-coded 1% rate)
+			if rng.randi_range(0, 99) == 0:
+				resources.set_cell(x, y, resource_tiles[rng.randi_range(0, resource_tiles.size() - 1)])

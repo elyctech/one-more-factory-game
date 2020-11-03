@@ -3,6 +3,8 @@ extends Button
 var key               : String = ""
 var listening_for_key : bool   = false
 
+onready var left_instruction  : Control = get_node("../../Instructions/LeftInstruction")
+
 export var action : String = ""
 
 
@@ -35,6 +37,8 @@ func _on_pressed(event):
 		if listening_for_key:
 			self.text = key
 			listening_for_key = false
+			
+			left_instruction.text = "Left-Click to Edit"
 		else:
 			# Right-click clears the control
 			if event.button_index == BUTTON_RIGHT:
@@ -51,6 +55,8 @@ func _on_pressed(event):
 
 				listening_for_key = true
 				self.text = "..."
+			
+				left_instruction.text = "Left-Click to Cancel"
 
 
 func refresh_key_text():
