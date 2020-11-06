@@ -5,83 +5,52 @@ var chunks_filled  : Dictionary
 var ground_tiles   : Array
 var resource_tiles : Array
 
-var controls_enabled : bool                  = true
-var move_speed       : int                   = 300
-var movement         : Vector2               = Vector2(0, 0)
-var rng              : RandomNumberGenerator = RandomNumberGenerator.new()
-var sqrt_half        : float                 = sqrt(0.5)
+var camera_offset       : Vector2
+var placing_structure   : bool = false
+var structure_placeable : bool = false
+var structure_to_place  : Area2D
 
-onready var camera    : Camera2D = get_node("Camera2D")
+var controls_enabled  : bool                  = true
+var move_speed        : int                   = 300
+var movement          : Vector2               = Vector2(0, 0)
+
+var rng               : RandomNumberGenerator = RandomNumberGenerator.new()
+var sqrt_half         : float                 = sqrt(0.5)
+
+var manual_miner = preload("res://Components/Structures/ManualMiner/ManualMiner.tscn")
+
+var items = {
+	"ManualMiner" : preload("res://Components/Items/ManualMiner/ManualMiner.tscn")
+}
+
+onready var camera    : Camera2D = get_node("Camera")
 onready var ground    : TileMap  = get_node("Ground")
 onready var resources : TileMap  = get_node("Resources")
 
 
-func _input(event):
-	if controls_enabled and event is InputEventKey:
-		var move_x      = false
-		var move_y      = false
-		var x_direction = 0
-		var y_direction = 0
-		
-		if Input.is_action_just_pressed("move_right") or Input.is_action_just_released("move_left"):
-			move_x      = true
-			x_direction = 1
-		elif Input.is_action_just_pressed("move_left") or Input.is_action_just_released("move_right"):
-			move_x      = true
-			x_direction = -1
-		elif Input.is_action_just_pressed("move_down") or Input.is_action_just_released("move_up"):
-			move_y      = true
-			y_direction = 1
-		elif Input.is_action_just_pressed("move_up") or Input.is_action_just_released("move_down"):
-			move_y      = true
-			y_direction = -1
-		
-		if move_x:
-			# If already moving in X, must be moving right
-			if movement.x != 0:
-				# Cancel X movement
-				movement.x = 0
-
-				# If also moving in Y, reset Y magnitude to 1 in the necessary direction
-				if movement.y != 0:
-					movement.y /= abs(movement.y)
-			# If not moving in X but moving in Y
-			elif movement.y != 0:
-				# Set each component magnitude so the full magnitude is 1
-				movement.x = x_direction * sqrt_half
-				movement.y = sign(movement.y) * sqrt_half
-			# If not moving at all
-			else:
-				movement.x = x_direction
-		elif move_y:
-			# If already moving in Y, must be moving up
-			if movement.y != 0:
-				# Cancel Y movement
-				movement.y = 0
-
-				# If also moving in X, reset X magnitude to 1 in the necessary direction
-				if movement.x:
-					movement.x /= abs(movement.x)
-			# If not moving in Y but moving in X
-			elif movement.x != 0:
-				# Set each component magnitude so the full magnitude is 1
-				movement.x = sign(movement.x) * sqrt_half
-				movement.y = y_direction * sqrt_half
-			# If not moving at all
-			else:
-				# Set the magnitude to 1
-				movement.y = y_direction
-
-
 func _physics_process(delta):
-	if movement.length() > 0:
-		var magnitude = delta * move_speed;
-
-		camera.position.x += movement.x * magnitude
-		camera.position.y += movement.y * magnitude
-		
+	if camera.just_moved:
 		# In case we jump chunks
 		ensure_chunks_filled()
+
+"Warehouse"
+func _process(_delta):
+	if placing_structure:
+		if Input.is_action_just_pressed("place_structure") and structure_placeable:
+			placing_structure  = false
+			structure_to_place = null
+			
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		else:
+			update_spawning_structure_placement()
+	elif Input.is_action_just_pressed("spawn_miner"):
+		placing_structure  = true
+		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+		
+		structure_to_place = manual_miner.instance()
+		update_spawning_structure_placement()
+		
+		self.add_child(structure_to_place)
 
 
 func _ready():
@@ -94,6 +63,12 @@ func _ready():
 	
 	# Set up chunks
 	chunk_size = Vector2(20, 20)
+	
+	# Save off starting camera position
+	camera_offset = Vector2(
+		camera.position.x,
+		camera.position.y
+	)
 
 	ensure_chunks_filled()
 
@@ -142,3 +117,26 @@ func generate_chunk(chunk_x, chunk_y):
 			# Determine if a resource should be set (hard-coded 1% rate)
 			if rng.randi_range(0, 99) == 0:
 				resources.set_cell(x, y, resource_tiles[rng.randi_range(0, resource_tiles.size() - 1)])
+
+
+func update_spawning_structure_placement():
+	var spawn_point = get_viewport().get_mouse_position() + camera.position - camera_offset
+
+	spawn_point = Vector2(
+		round(spawn_point.x / ground.cell_size.x),
+		round(spawn_point.y / ground.cell_size.y)
+	) * ground.cell_size - ground.cell_size / 2
+	
+	structure_to_place.position = spawn_point
+	
+	var cell_point = Vector2(
+		spawn_point.x / ground.cell_size.x - 0.5,
+		spawn_point.y / ground.cell_size.y - 0.5
+	)
+	
+	structure_placeable = resources.get_cellv(cell_point) > -1
+	
+	if structure_placeable:
+		structure_to_place.modulate.a = 1.0
+	else:
+		structure_to_place.modulate.a = 0.3

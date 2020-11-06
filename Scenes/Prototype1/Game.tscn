@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scenes/Prototype1/Game.gd" type="Script" id=1]
 [ext_resource path="res://Components/InGameMenu/Controls/Controls.tscn" type="PackedScene" id=2]
 [ext_resource path="res://TileSets/Ground.tres" type="TileSet" id=3]
 [ext_resource path="res://TileSets/Resources.tres" type="TileSet" id=4]
+[ext_resource path="res://Components/Camera/Camera.tscn" type="PackedScene" id=5]
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
@@ -15,9 +16,10 @@ format = 1
 
 [node name="Resources" type="TileMap" parent="."]
 tile_set = ExtResource( 4 )
+cell_size = Vector2( 32, 32 )
 format = 1
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera" parent="." instance=ExtResource( 5 )]
 position = Vector2( 512, 300 )
 current = true
 
