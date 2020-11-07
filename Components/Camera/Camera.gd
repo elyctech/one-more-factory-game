@@ -18,7 +18,7 @@ func _physics_process(delta):
 		just_moved = false
 
 
-func _process(delta):
+func _process(_delta):
 	process_input()
 
 

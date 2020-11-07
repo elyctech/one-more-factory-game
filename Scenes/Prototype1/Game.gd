@@ -10,40 +10,53 @@ var placing_structure   : bool = false
 var structure_placeable : bool = false
 var structure_to_place  : Area2D
 
-var controls_enabled  : bool                  = true
-var move_speed        : int                   = 300
-var movement          : Vector2               = Vector2(0, 0)
-
-var rng               : RandomNumberGenerator = RandomNumberGenerator.new()
-var sqrt_half         : float                 = sqrt(0.5)
+var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 
 var manual_miner = preload("res://Components/Structures/ManualMiner/ManualMiner.tscn")
 
-var items = {
-	"ManualMiner" : preload("res://Components/Items/ManualMiner/ManualMiner.tscn")
+var items : Dictionary = {
+	"ManualMiner" : 3
 }
 
-onready var camera    : Camera2D = get_node("Camera")
-onready var ground    : TileMap  = get_node("Ground")
-onready var resources : TileMap  = get_node("Resources")
+onready var camera            : Camera2D   = get_node("Camera")
+onready var structure_hotkeys : Control    = get_node("CanvasLayer/StructureHotkeys")
+onready var ground            : TileMap    = get_node("Ground")
+onready var resources         : TileMap    = get_node("Resources")
+onready var warehouse         : PopupPanel = get_node("CanvasLayer/Warehouse")
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if camera.just_moved:
 		# In case we jump chunks
 		ensure_chunks_filled()
 
-"Warehouse"
+
 func _process(_delta):
 	if placing_structure:
 		if Input.is_action_just_pressed("place_structure") and structure_placeable:
+			items["ManualMiner"] -= 1
+			structure_hotkeys.set_manual_miner_count(items["ManualMiner"])
+			
+			var cell_point = Vector2(
+				structure_to_place.position.x / ground.cell_size.x - 0.5,
+				structure_to_place.position.y / ground.cell_size.y - 0.5
+			)
+			
+			var resource_name = resources.tile_set.tile_get_name(
+				resources.get_cellv(cell_point)
+			).capitalize()
+			
+			structure_to_place.resource_name = resource_name.substr(0, resource_name.length() - 1)
+			
+			warehouse.remove_item("Manual Miner")
+			
 			placing_structure  = false
 			structure_to_place = null
 			
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		else:
 			update_spawning_structure_placement()
-	elif Input.is_action_just_pressed("spawn_miner"):
+	elif Input.is_action_just_pressed("spawn_miner") and items.ManualMiner > 0:
 		placing_structure  = true
 		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 		
@@ -51,11 +64,22 @@ func _process(_delta):
 		update_spawning_structure_placement()
 		
 		self.add_child(structure_to_place)
+	elif Input.is_action_just_pressed("open_warehouse"):
+		if warehouse.visible:
+			warehouse.hide()
+		else:
+			warehouse.popup()
 
 
 func _ready():
 	# Set up RNG
 	rng.randomize()
+	
+	# Set up Structure counts
+	structure_hotkeys.set_manual_miner_count(items["ManualMiner"])
+	
+	for i in range(0, items["ManualMiner"]):
+		warehouse.add_item("Manual Miner")
 	
 	# Set up tiles
 	ground_tiles   = ground.tile_set.get_tiles_ids()
@@ -70,15 +94,8 @@ func _ready():
 		camera.position.y
 	)
 
+	# Fill visible chunks
 	ensure_chunks_filled()
-
-
-func disable_controls():
-	controls_enabled = false
-
-
-func enable_controls():
-	controls_enabled = true
 
 
 func ensure_chunks_filled():

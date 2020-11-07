@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scenes/Prototype1/Game.gd" type="Script" id=1]
 [ext_resource path="res://Components/InGameMenu/Controls/Controls.tscn" type="PackedScene" id=2]
 [ext_resource path="res://TileSets/Ground.tres" type="TileSet" id=3]
 [ext_resource path="res://TileSets/Resources.tres" type="TileSet" id=4]
 [ext_resource path="res://Components/Camera/Camera.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Components/StructureHotkeys/StructureHotkeys.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Components/Warehouse/Warehouse.tscn" type="PackedScene" id=7]
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
@@ -30,3 +32,7 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 272.0
 margin_bottom = 216.0
+
+[node name="StructureHotkeys" parent="CanvasLayer" instance=ExtResource( 6 )]
+
+[node name="Warehouse" parent="CanvasLayer" instance=ExtResource( 7 )]
