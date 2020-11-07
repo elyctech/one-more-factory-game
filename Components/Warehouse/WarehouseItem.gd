@@ -16,6 +16,10 @@ func add_item():
 	item_count_label.text = str(item_count)
 
 
+func get_item_count():
+	return item_count
+
+
 func remove_item():
 	item_count -= 1
 	item_count_label.text = str(item_count)

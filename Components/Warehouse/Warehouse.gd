@@ -20,6 +20,15 @@ func add_item(item_name):
 	item_control.add_item()
 
 
+func get_item_count(item_name):
+	var item_count := 0
+	
+	if items.has(item_name):
+		item_count = items[item_name].get_item_count()
+	
+	return item_count
+
+
 func remove_item(item_name):
 	if items.has(item_name):
 		items[item_name].remove_item()

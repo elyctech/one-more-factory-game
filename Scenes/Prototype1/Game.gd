@@ -12,11 +12,8 @@ var structure_to_place  : Area2D
 
 var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 
-var manual_miner = preload("res://Components/Structures/ManualMiner/ManualMiner.tscn")
-
-var items : Dictionary = {
-	"ManualMiner" : 3
-}
+var manual_constructor = preload("res://lib/manual_constructor/manual_constructor.tscn")
+var manual_miner       = preload("res://Components/Structures/ManualMiner/ManualMiner.tscn")
 
 onready var camera            : Camera2D   = get_node("Camera")
 onready var structure_hotkeys : Control    = get_node("CanvasLayer/StructureHotkeys")
@@ -34,8 +31,8 @@ func _physics_process(_delta):
 func _process(_delta):
 	if placing_structure:
 		if Input.is_action_just_pressed("place_structure") and structure_placeable:
-			items["ManualMiner"] -= 1
-			structure_hotkeys.set_manual_miner_count(items["ManualMiner"])
+			warehouse.remove_item("Manual Miner")
+			structure_hotkeys.set_manual_miner_count(warehouse.get_item_count("Manual Miner"))
 			
 			var cell_point = Vector2(
 				structure_to_place.position.x / ground.cell_size.x - 0.5,
@@ -48,15 +45,13 @@ func _process(_delta):
 			
 			structure_to_place.resource_name = resource_name.substr(0, resource_name.length() - 1)
 			
-			warehouse.remove_item("Manual Miner")
-			
 			placing_structure  = false
 			structure_to_place = null
 			
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		else:
 			update_spawning_structure_placement()
-	elif Input.is_action_just_pressed("spawn_miner") and items.ManualMiner > 0:
+	elif Input.is_action_just_pressed("spawn_miner") and warehouse.get_item_count("Manual Miner") > 0:
 		placing_structure  = true
 		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 		
@@ -76,9 +71,10 @@ func _ready():
 	rng.randomize()
 	
 	# Set up Structure counts
-	structure_hotkeys.set_manual_miner_count(items["ManualMiner"])
+	var manual_miner_count : int = warehouse.get_item_count("Manual Miner")
+	structure_hotkeys.set_manual_miner_count(manual_miner_count)
 	
-	for i in range(0, items["ManualMiner"]):
+	for i in range(0, manual_miner_count):
 		warehouse.add_item("Manual Miner")
 	
 	# Set up tiles
