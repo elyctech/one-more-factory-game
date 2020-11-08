@@ -1,35 +1,25 @@
 extends PopupPanel
 
-var items : Dictionary = {}
+var _item_controls : Dictionary = {}
 
 var item_control_scene = preload("res://Components/Warehouse/WarehouseItem.tscn")
 
 onready var item_container : GridContainer = get_node("ScrollContainer/Items")
 
-func add_item(item_name):
-	var item_control
-	
-	if items.has(item_name):
-		item_control = items[item_name]
+
+func _ready():
+	get_node("/root/Warehouse").connect("item_count_changed", self, "update_item_count")
+
+
+func update_item_count(item_name, item_count):
+	if _item_controls.has(item_name):
+		_item_controls[item_name].set_item_count(item_count)
 	else:
-		item_control = item_control_scene.instance()
+		var item_control = item_control_scene.instance()
 		item_control.item_name = item_name
-		items[item_name] = item_control
+		
+		_item_controls[item_name] = item_control
+		
 		item_container.add_child(item_control)
-	
-	item_control.add_item()
-
-
-func get_item_count(item_name):
-	var item_count := 0
-	
-	if items.has(item_name):
-		item_count = items[item_name].get_item_count()
-	
-	return item_count
-
-
-func remove_item(item_name):
-	if items.has(item_name):
-		items[item_name].remove_item()
-	
+		
+		item_control.set_item_count(item_count)

@@ -8,9 +8,14 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Node2D",
+"class": "GameWorld",
+"language": "GDScript",
+"path": "res://lib/game_world/game_world.gd"
+} ]
 _global_script_class_icons={
-
+"GameWorld": ""
 }
 
 [application]
@@ -18,6 +23,10 @@ _global_script_class_icons={
 config/name="OneMoreFactoryGame"
 run/main_scene="res://Scenes/Title/TitleScreen.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Warehouse="res://lib/warehouse/warehouse.gd"
 
 [input]
 

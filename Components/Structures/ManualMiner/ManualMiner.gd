@@ -2,7 +2,7 @@ extends Node2D
 
 var resource_name := ""
 
-onready var warehouse = get_node("/root/Game/CanvasLayer/Warehouse")
+onready var warehouse = get_node("/root/Warehouse")
 
 
 func _on_input_event(_viewport, event, _shape_idx):

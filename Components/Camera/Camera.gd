@@ -1,9 +1,9 @@
 extends Camera2D
 
-var just_moved : bool    = false
-var move_speed : int     = 300
-var movement   : Vector2 = Vector2(0, 0)
-var sqrt_half  : float   = sqrt(0.5)
+var just_moved : bool = false
+var move_speed : int = 300
+var movement : Vector2 = Vector2(0, 0)
+var sqrt_half : float = sqrt(0.5)
 
 
 func _physics_process(delta):
@@ -23,28 +23,28 @@ func _process(_delta):
 
 
 func process_input():
-	var move_x      = false
-	var move_y      = false
+	var move_x = false
+	var move_y = false
 	var x_direction = 0
 	var y_direction = 0
 	
-	var move_down  = Input.is_action_pressed("move_down")
-	var move_left  = Input.is_action_pressed("move_left")
+	var move_down = Input.is_action_pressed("move_down")
+	var move_left = Input.is_action_pressed("move_left")
 	var move_right = Input.is_action_pressed("move_right")
-	var move_up    = Input.is_action_pressed("move_up")
+	var move_up = Input.is_action_pressed("move_up")
 	
 	if move_right and !move_left:
-		move_x      = true
+		move_x = true
 		x_direction = 1
 	elif move_left and !move_right:
-		move_x      = true
+		move_x = true
 		x_direction = -1
 
 	if move_down and !move_up:
-		move_y      = true
+		move_y = true
 		y_direction = 1
 	elif move_up and !move_down:
-		move_y      = true
+		move_y = true
 		y_direction = -1
 	
 	# If moving in both directions
