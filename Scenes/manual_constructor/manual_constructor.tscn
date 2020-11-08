@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://lib/manual_constructor/manual_constructor.gd" type="Script" id=1]
+[ext_resource path="res://scenes/manual_constructor/manual_constructor.gd" type="Script" id=1]
 [ext_resource path="res://Textures/objects1.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]

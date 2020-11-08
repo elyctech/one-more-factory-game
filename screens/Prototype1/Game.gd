@@ -9,7 +9,7 @@ var structure_to_place : Area2D
 
 var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 
-var manual_constructor = preload("res://lib/manual_constructor/manual_constructor.tscn")
+var manual_constructor = preload("res://scenes/manual_constructor/manual_constructor.tscn")
 var manual_miner = preload("res://Components/Structures/ManualMiner/ManualMiner.tscn")
 
 onready var camera : Camera2D = get_node("Camera")
