@@ -1,6 +1,10 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://Components/InGameMenu/Main.gd" type="Script" id=1]
+[ext_resource path="res://components/in_game_menu/in_game_menu.gd" type="Script" id=1]
+
+
+
+
 
 [node name="Main" type="Control"]
 anchor_right = 1.0

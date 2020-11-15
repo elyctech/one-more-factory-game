@@ -6,8 +6,8 @@ var resources : ResourceLayer
 
 # TODO Not hardcode this?
 var _structures := {
-	"Manual Constructor": preload("res://scenes/manual_constructor/manual_constructor.tscn"),
-	"Manual Miner": preload("res://Components/Structures/ManualMiner/ManualMiner.tscn"),
+	"Manual Constructor": preload("res://components/structures/manual_constructor/manual_constructor.tscn"),
+	"Manual Miner": preload("res://components/structures/manual_miner/manual_miner.tscn"),
 }
 
 var _placing_structure : bool

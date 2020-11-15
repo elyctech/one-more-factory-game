@@ -9,30 +9,30 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Camera2D",
+"base": "Reference",
 "class": "GameCamera",
 "language": "GDScript",
-"path": "res://Components/Camera/Camera.gd"
+"path": "res://components/game_camera/game_camera.gd"
 }, {
 "base": "Node2D",
 "class": "GameWorld",
 "language": "GDScript",
-"path": "res://scenes/game_world/game_world.gd"
+"path": "res://components/game_world/game_world.gd"
 }, {
 "base": "Node2D",
 "class": "GroundLayer",
 "language": "GDScript",
-"path": "res://Components/ground_layer/ground_layer.gd"
+"path": "res://components/ground_layer/ground_layer.gd"
 }, {
 "base": "Area2D",
 "class": "ManualConstructor",
 "language": "GDScript",
-"path": "res://scenes/manual_constructor/manual_constructor.gd"
+"path": "res://components/structures/manual_constructor/manual_constructor.gd"
 }, {
 "base": "Area2D",
 "class": "ManualMiner",
 "language": "GDScript",
-"path": "res://Components/Structures/ManualMiner/ManualMiner.gd"
+"path": "res://components/structures/manual_miner/manual_miner.gd"
 }, {
 "base": "Node",
 "class": "Mouse",
@@ -42,12 +42,12 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "ResourceLayer",
 "language": "GDScript",
-"path": "res://Components/resource_layer/resource_layer.gd"
+"path": "res://components/resource_layer/resource_layer.gd"
 }, {
 "base": "Node2D",
 "class": "StructureLayer",
 "language": "GDScript",
-"path": "res://Components/structure_layer/structure_layer.gd"
+"path": "res://components/structure_layer/structure_layer.gd"
 }, {
 "base": "Node",
 "class": "Warehouse",
@@ -69,7 +69,7 @@ _global_script_class_icons={
 [application]
 
 config/name="OneMoreFactoryGame"
-run/main_scene="res://screens/Title/TitleScreen.tscn"
+run/main_scene="res://screens/title/title_screen.tscn"
 config/icon="res://icon.png"
 
 [autoload]
