@@ -1,8 +1,10 @@
-extends Node2D
+class_name ManualMiner
+extends Area2D
 
+var item_name := "Manual Miner"
 var resource_name := ""
 
-onready var warehouse = get_node("/root/Warehouse")
+onready var warehouse = get_node("/root/warehouse")
 
 
 func _on_input_event(_viewport, event, _shape_idx):

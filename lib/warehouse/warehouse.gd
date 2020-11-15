@@ -1,12 +1,9 @@
+class_name Warehouse
 extends Node
 
 signal item_count_changed
 
 var _items : Dictionary = {}
-
-
-func _ready():
-	print(get_path())
 
 
 func add_item(item_name, amount = 1):

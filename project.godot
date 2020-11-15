@@ -9,13 +9,61 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Camera2D",
+"class": "GameCamera",
+"language": "GDScript",
+"path": "res://Components/Camera/Camera.gd"
+}, {
 "base": "Node2D",
 "class": "GameWorld",
 "language": "GDScript",
 "path": "res://scenes/game_world/game_world.gd"
+}, {
+"base": "Node2D",
+"class": "GroundLayer",
+"language": "GDScript",
+"path": "res://Components/ground_layer/ground_layer.gd"
+}, {
+"base": "Area2D",
+"class": "ManualConstructor",
+"language": "GDScript",
+"path": "res://scenes/manual_constructor/manual_constructor.gd"
+}, {
+"base": "Area2D",
+"class": "ManualMiner",
+"language": "GDScript",
+"path": "res://Components/Structures/ManualMiner/ManualMiner.gd"
+}, {
+"base": "Node",
+"class": "Mouse",
+"language": "GDScript",
+"path": "res://lib/mouse/mouse.gd"
+}, {
+"base": "Node2D",
+"class": "ResourceLayer",
+"language": "GDScript",
+"path": "res://Components/resource_layer/resource_layer.gd"
+}, {
+"base": "Node2D",
+"class": "StructureLayer",
+"language": "GDScript",
+"path": "res://Components/structure_layer/structure_layer.gd"
+}, {
+"base": "Node",
+"class": "Warehouse",
+"language": "GDScript",
+"path": "res://lib/warehouse/warehouse.gd"
 } ]
 _global_script_class_icons={
-"GameWorld": ""
+"GameCamera": "",
+"GameWorld": "",
+"GroundLayer": "",
+"ManualConstructor": "",
+"ManualMiner": "",
+"Mouse": "",
+"ResourceLayer": "",
+"StructureLayer": "",
+"Warehouse": ""
 }
 
 [application]
@@ -26,10 +74,21 @@ config/icon="res://icon.png"
 
 [autoload]
 
-Warehouse="res://lib/warehouse/warehouse.gd"
+mouse="res://lib/mouse/mouse.gd"
+warehouse="res://lib/warehouse/warehouse.gd"
 
 [input]
 
+hotkey1={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":49,"unicode":0,"echo":false,"script":null)
+ ]
+}
+hotkey2={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":50,"unicode":0,"echo":false,"script":null)
+ ]
+}
 move_down={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"unicode":0,"echo":false,"script":null)
@@ -58,11 +117,6 @@ open_in_game_menu={
 place_structure={
 "deadzone": 0.5,
 "events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
- ]
-}
-spawn_miner={
-"deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":49,"unicode":0,"echo":false,"script":null)
  ]
 }
 open_warehouse={

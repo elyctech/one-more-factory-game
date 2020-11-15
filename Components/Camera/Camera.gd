@@ -1,17 +1,25 @@
+class_name GameCamera
 extends Camera2D
 
 var just_moved : bool = false
-var move_speed : int = 300
-var movement : Vector2 = Vector2(0, 0)
-var sqrt_half : float = sqrt(0.5)
+
+var _move_speed : int = 300
+var _movement : Vector2 = Vector2(0, 0)
+var _sqrt_half : float = sqrt(0.5)
+
+var _world_offset : Vector2
+
+
+func _ready():
+	_world_offset = self.position
 
 
 func _physics_process(delta):
-	if movement.length() > 0:
-		var magnitude = delta * move_speed;
-
-		self.position.x += movement.x * magnitude
-		self.position.y += movement.y * magnitude
+	if _movement.length() > 0:
+		var magnitude = delta * _move_speed;
+		
+		self.position.x += _movement.x * magnitude
+		self.position.y += _movement.y * magnitude
 		
 		just_moved = true
 	elif just_moved:
@@ -19,10 +27,14 @@ func _physics_process(delta):
 
 
 func _process(_delta):
-	process_input()
+	_process_input()
 
 
-func process_input():
+func get_world_position():
+	return self.position - _world_offset
+
+
+func _process_input():
 	var move_x = false
 	var move_y = false
 	var x_direction = 0
@@ -50,9 +62,9 @@ func process_input():
 	# If moving in both directions
 	if move_x and move_y:
 		# Set each component magnitude so the full magnitude is 1
-		movement.x = x_direction * sqrt_half
-		movement.y = y_direction * sqrt_half
+		_movement.x = x_direction * _sqrt_half
+		_movement.y = y_direction * _sqrt_half
 	else:
 		# Otherwise, direction variables will determine which way to move
-		movement.x = x_direction
-		movement.y = y_direction
+		_movement.x = x_direction
+		_movement.y = y_direction

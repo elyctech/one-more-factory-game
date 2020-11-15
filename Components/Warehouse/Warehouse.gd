@@ -8,7 +8,7 @@ onready var item_container : GridContainer = get_node("ScrollContainer/Items")
 
 
 func _ready():
-	get_node("/root/Warehouse").connect("item_count_changed", self, "update_item_count")
+	var _error = get_node("/root/warehouse").connect("item_count_changed", self, "update_item_count")
 
 
 func update_item_count(item_name, item_count):

@@ -1,13 +1,17 @@
 extends Control
 
-var manual_miner_text = "Manual Miner (%s)"
+onready var warehouse : Warehouse = get_node("/root/warehouse")
 
-onready var manual_miner : Label = get_node("ManualMiner")
+onready var structure_counts = {
+	"Manual Constructor" : get_node("ManualConstructorCount"),
+	"Manual Miner" : get_node("ManualMinerCount")
+}
 
 
 func _ready():
-	set_manual_miner_count(0)
+	var _error = warehouse.connect("item_count_changed", self, "_update_structure_count")
 
 
-func set_manual_miner_count(count):
-	manual_miner.text = manual_miner_text % str(count)
+func _update_structure_count(item_name, item_count):
+	if structure_counts.has(item_name):
+		structure_counts[item_name].text = str(item_count)
