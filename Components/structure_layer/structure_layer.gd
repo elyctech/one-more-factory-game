@@ -34,6 +34,9 @@ func has_structure_at(cell_x, cell_y):
 
 
 func start_placing_structure(structure_name):
+	if _placing_structure:
+		_cancel_placing_structure()
+	
 	var structure_scene = _structures.get(structure_name)
 	
 	# TODO Throw error if null
@@ -46,6 +49,12 @@ func start_placing_structure(structure_name):
 		# Enter placing structure mode
 		_placing_structure = true
 		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+
+
+func _cancel_placing_structure():
+	_structure_to_place.queue_free()
+	_structure_to_place = null
+	_placing_structure = false
 
 
 func _finish_placing_structure():
