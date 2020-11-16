@@ -1,8 +1,8 @@
 class_name GameWorld
 extends Node2D
 
-export var chunk_size : Vector2 = Vector2(20, 20)
-export var resource_rate : float = 0.01
+var _chunk_size : Vector2 = Vector2(20, 20)
+var _resource_rate : float = 0.001
 
 var _rng : RandomNumberGenerator = RandomNumberGenerator.new()
 
@@ -19,21 +19,21 @@ func _ready():
 
 func generate_chunk(chunk_x, chunk_y):
 	# Find starting tiles
-	var start_x = chunk_x * chunk_size.x
-	var start_y = chunk_y * chunk_size.y
+	var start_x = chunk_x * _chunk_size.x
+	var start_y = chunk_y * _chunk_size.y
 	
-	for x in range(start_x, start_x + chunk_size.x):
-		for y in range(start_y, start_y + chunk_size.y):
+	for x in range(start_x, start_x + _chunk_size.x):
+		for y in range(start_y, start_y + _chunk_size.y):
 			# Add a ground tile
 			_ground_layer.set_cell(x, y, _rng.randi_range(0, _ground_layer.get_ground_tile_count() - 1))
 			
 			# Determine if a resource should be set (hard-coded 1% rate)
-			if _rng.randi_range(0, 99) == 0:
+			if _rng.randi_range(0, 1 / _resource_rate) == 0:
 				_resource_layer.set_cell(x, y, _rng.randi_range(0, _resource_layer.get_resource_tile_count() - 1))
 
 
 func get_chunk_size():
-	return chunk_size
+	return _chunk_size
 
 
 func get_ground_cell_size():
