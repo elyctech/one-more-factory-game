@@ -1,0 +1,270 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Button
+
+var key               : String = \"\"
+var listening_for_key : bool   = false
+
+onready var left_instruction  : Control = get_node(\"../../Instructions/LeftInstruction\")
+
+export var action : String = \"\"
+
+
+func _input(event):
+	# Listen for key input when resetting a binding
+	if listening_for_key and event is InputEventKey:
+		get_tree().set_input_as_handled()
+
+		InputMap.action_erase_events(action)
+		InputMap.action_add_event(action, event)
+
+		listening_for_key = false
+
+		# Enable controls while done changing controls
+		var scene = get_tree().current_scene
+
+		if scene.has_method(\"enable_controls\"):
+			scene.enable_controls()
+
+		refresh_key_text()
+
+
+func _ready():
+	refresh_key_text()
+
+
+func _on_pressed(event):
+	if event is InputEventMouseButton and event.pressed == false:
+		# Pressing while listening cancels the edit
+		if listening_for_key:
+			self.text = key
+			listening_for_key = false
+			
+			left_instruction.text = \"Left-Click to Edit\"
+		else:
+			# Right-click clears the control
+			if event.button_index == BUTTON_RIGHT:
+				InputMap.action_erase_events(action)
+				key = \"\"
+				self.text = \"\"
+			# All other clicks activate editing the control
+			else:
+				# Disable controls while changing controls
+				var scene = get_tree().current_scene
+
+				if scene.has_method(\"disable_controls\"):
+					scene.disable_controls()
+
+				listening_for_key = true
+				self.text = \"...\"
+			
+				left_instruction.text = \"Left-Click to Cancel\"
+
+
+func refresh_key_text():
+	key = InputMap.get_action_list(action)[0].as_text()
+	self.text = key
+"
+
+[node name="Controls" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MoveDownControl" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -128.0
+margin_top = -100.0
+margin_right = 128.0
+margin_bottom = -68.0
+
+[node name="Label" type="Label" parent="MoveDownControl"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -128.0
+margin_top = -16.0
+margin_bottom = 16.0
+text = "Move Down"
+valign = 1
+
+[node name="Input" type="Button" parent="MoveDownControl"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_top = -16.0
+margin_right = 128.0
+margin_bottom = 16.0
+button_mask = 3
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+action = "move_down"
+
+[node name="MoveLeftControl" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -128.0
+margin_top = -60.0
+margin_right = 128.0
+margin_bottom = -28.0
+
+[node name="Label" type="Label" parent="MoveLeftControl"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -128.0
+margin_top = -16.0
+margin_bottom = 16.0
+text = "Move Left"
+valign = 1
+
+[node name="Input" type="Button" parent="MoveLeftControl"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_top = -16.0
+margin_right = 128.0
+margin_bottom = 16.0
+button_mask = 3
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+action = "move_left"
+
+[node name="MoveRightControl" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -128.0
+margin_top = -20.0
+margin_right = 128.0
+margin_bottom = 12.0
+
+[node name="Label" type="Label" parent="MoveRightControl"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -128.0
+margin_top = -16.0
+margin_bottom = 16.0
+text = "Move Right"
+valign = 1
+
+[node name="Input" type="Button" parent="MoveRightControl"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_top = -16.0
+margin_right = 128.0
+margin_bottom = 16.0
+button_mask = 3
+script = SubResource( 1 )
+action = "move_right"
+
+[node name="MoveUpControl" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -128.0
+margin_top = 20.0
+margin_right = 128.0
+margin_bottom = 52.0
+rect_pivot_offset = Vector2( -16, 120 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="MoveUpControl"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -128.0
+margin_top = -16.0
+margin_bottom = 16.0
+text = "Move Up"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Input" type="Button" parent="MoveUpControl"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_top = -16.0
+margin_right = 128.0
+margin_bottom = 16.0
+button_mask = 3
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+action = "move_up"
+
+[node name="Instructions" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -128.0
+margin_top = 60.0
+margin_right = 128.0
+margin_bottom = 92.0
+rect_pivot_offset = Vector2( -16, 120 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeftInstruction" type="Label" parent="Instructions"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -128.0
+margin_top = -16.0
+margin_bottom = 16.0
+text = "Left-Click to Edit"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RightInstruction" type="Label" parent="Instructions"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_top = -16.0
+margin_right = 128.0
+margin_bottom = 16.0
+text = "Right-Click to Clear"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="gui_input" from="MoveDownControl/Input" to="MoveDownControl/Input" method="_on_pressed"]
+[connection signal="gui_input" from="MoveLeftControl/Input" to="MoveLeftControl/Input" method="_on_pressed"]
+[connection signal="gui_input" from="MoveRightControl/Input" to="MoveRightControl/Input" method="_on_pressed"]
+[connection signal="gui_input" from="MoveUpControl/Input" to="MoveUpControl/Input" method="_on_pressed"]
