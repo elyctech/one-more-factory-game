@@ -31,7 +31,7 @@ func _process(_delta):
 
 
 func get_world_position():
-	return self.position - _world_offset
+	return self.position - get_viewport().size / 2
 
 
 func _process_input():
