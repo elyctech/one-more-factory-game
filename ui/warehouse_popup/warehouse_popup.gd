@@ -2,7 +2,7 @@ extends PopupPanel
 
 var _item_controls : Dictionary = {}
 
-var item_control_scene = preload("res://components/warehouse_popup/warehouse_item.tscn")
+var item_control_scene = preload("res://ui/warehouse_popup/warehouse_item.tscn")
 
 onready var item_container : GridContainer = get_node("ScrollContainer/Items")
 
