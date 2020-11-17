@@ -28,7 +28,7 @@ func generate_chunk(chunk_x, chunk_y):
 			_ground_layer.set_cell(x, y, _rng.randi_range(0, _ground_layer.get_ground_tile_count() - 1))
 			
 			# Determine if a resource should be set (hard-coded 1% rate)
-			if _rng.randi_range(0, 1 / _resource_rate) == 0:
+			if _rng.randi_range(0, int(1.0 / _resource_rate)) == 0:
 				_resource_layer.set_cell(x, y, _rng.randi_range(0, _resource_layer.get_resource_tile_count() - 1))
 
 
