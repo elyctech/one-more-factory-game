@@ -40,6 +40,15 @@ func get_ground_cell_size():
 	return _ground_layer.get_ground_cell_size()
 
 
+# TODO Would it be better to just grab this from /root/Game?
+func set_constructor_recipe_popup(
+	constructor_recipe_popup
+):
+	_structure_layer.set_constructor_recipe_popup(
+		constructor_recipe_popup	
+	)
+
+
 func start_placing_structure(structure_name):
 	# Delegate to the structure layer
 	_structure_layer.start_placing_structure(structure_name)

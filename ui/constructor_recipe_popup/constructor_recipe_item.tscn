@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ui/constructor_recipe_popup/constructor_recipe_item.gd" type="Script" id=1]
+
+[node name="constructor_recipe_item" type="Button"]
+margin_right = 248.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 248, 24 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="." to="." method="_on_pressed"]

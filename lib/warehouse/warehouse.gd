@@ -16,7 +16,12 @@ func add_item(item_name, amount = 1):
 
 
 func get_item_count(item_name):
-	return _items[item_name]
+	var item_count = 0
+	
+	if _items.has(item_name):
+		item_count = _items[item_name]
+	
+	return item_count
 
 
 func remove_item(item_name, amount = 1):

@@ -4,16 +4,17 @@ extends Node2D
 var ground : GroundLayer
 var resources : ResourceLayer
 
+var _constructor_recipe_popup : PopupPanel
+var _placing_structure : bool
+var _structure_placeable : bool
+var _structure_to_place : Area2D
+var _structures_placed : Dictionary
+
 # TODO Not hardcode this?
 var _structures := {
 	"Manual Constructor": preload("res://components/structures/manual_constructor/manual_constructor.tscn"),
 	"Manual Miner": preload("res://components/structures/manual_miner/manual_miner.tscn"),
 }
-
-var _placing_structure : bool
-var _structure_placeable : bool
-var _structure_to_place : Area2D
-var _structures_placed : Dictionary
 
 onready var _mouse : Mouse = get_node("/root/mouse")
 onready var _warehouse : Warehouse = get_node("/root/warehouse")
@@ -31,6 +32,12 @@ func has_structure_at(cell_x, cell_y):
 	var x_structures_placed = _structures_placed.get(cell_x)
 	
 	return x_structures_placed != null and x_structures_placed.get(cell_y) != null
+
+
+func set_constructor_recipe_popup(
+	constructor_recipe_popup
+):
+	_constructor_recipe_popup = constructor_recipe_popup
 
 
 func start_placing_structure(structure_name):
@@ -71,6 +78,8 @@ func _finish_placing_structure():
 				cell_x,
 				cell_y
 			)
+		elif _structure_to_place is ManualConstructor:
+			var _error = _structure_to_place.connect("recipe_change_requested", self, "_show_constructor_recipe_popup")
 		
 		# Register this cell as taken
 		var x_structures_placed = _structures_placed.get(cell_x)
@@ -91,6 +100,11 @@ func _finish_placing_structure():
 		# Exit placing structure mode
 		_placing_structure  = false
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+
+func _show_constructor_recipe_popup(constructor):
+	_constructor_recipe_popup.constructor = constructor
+	_constructor_recipe_popup.popup()
 
 
 func _update_structure_preview():

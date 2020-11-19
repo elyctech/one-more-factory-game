@@ -3,6 +3,7 @@ extends Node2D
 var chunks_filled  : Dictionary
 
 onready var _camera : GameCamera = get_node("Camera")
+onready var _constructor_recipe_popup := get_node("CanvasLayer/ConstructorRecipePopup")
 onready var _game_world : GameWorld = get_node("GameWorld")
 onready var _mouse : Mouse = get_node("/root/mouse")
 onready var _structure_hotkeys : Control = get_node("CanvasLayer/StructureHotkeys")
@@ -33,8 +34,12 @@ func _process(_delta):
 
 
 func _ready():
+	# TODO change to set_camera - lifecycle is not as expected
 	# Set up mouse
 	_mouse.camera = _camera
+	
+	# Set up game world
+	_game_world.set_constructor_recipe_popup(_constructor_recipe_popup)
 	
 	# Start with some structures
 	_warehouse.add_item("Manual Miner", 3)
