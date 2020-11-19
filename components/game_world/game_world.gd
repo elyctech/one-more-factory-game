@@ -15,6 +15,9 @@ func _ready():
 	# Set up structure layer
 	_structure_layer.ground = _ground_layer
 	_structure_layer.resources = _resource_layer
+	
+	# Set-up RNG
+	_rng.randomize()
 
 
 func generate_chunk(chunk_x, chunk_y):
