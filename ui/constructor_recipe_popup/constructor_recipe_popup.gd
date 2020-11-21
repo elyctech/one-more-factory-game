@@ -9,11 +9,42 @@ var _constructor_recipe_item = preload("res://ui/constructor_recipe_popup/constr
 # TODO Move to autoload catalog?
 var _recipes = {
 	"Iron Ingot" : {
+		"construction_time" : 500,
 		"recipe_name" : "Iron Ingot",
+		"item_yield" : 1,
+		
 		"ingredients" : {
-			"Iron Ore" : 1
+			"Iron Ore" : 1,
 		},
-	}
+	},
+	"Iron Plate" : {
+		"construction_time" : 1000,
+		"recipe_name" : "Iron Plate",
+		"item_yield" : 1,
+		
+		"ingredients" : {
+			"Iron Ingot" : 1,
+		},
+	},
+	"Iron Bolt" : {
+		"construction_time" : 1000,
+		"recipe_name" : "Iron Bolt",
+		"item_yield" : 6,
+		
+		"ingredients" : {
+			"Iron Ingot" : 1,
+		},
+	},
+	"Manual Constructor" : {
+		"construction_time" : 5000,
+		"recipe_name" : "Manual Constructor",
+		"item_yield" : 1,
+		
+		"ingredients" : {
+			"Iron Plate" : 6,
+			"Iron Bolt" : 24,
+		},
+	},
 }
 
 onready var _recipe_grid : GridContainer = get_node("ScrollContainer/Recipes")
