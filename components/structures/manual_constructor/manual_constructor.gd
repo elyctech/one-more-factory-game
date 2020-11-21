@@ -8,8 +8,6 @@ var recipe
 
 var _interaction_response := preload("res://ui/interaction_response/interaction_response.tscn")
 var _last_construction := 0
-# TODO Limit this per-recipe
-var _construction_rate := 500
 
 onready var warehouse = get_node("/root/warehouse")
 
@@ -19,7 +17,7 @@ func _on_input_event(_viewport, event, _shape_idx):
 		if event.button_index == BUTTON_RIGHT:
 			self.emit_signal("recipe_change_requested", self)
 		elif event.button_index == BUTTON_LEFT and recipe != null:
-			if OS.get_ticks_msec() - _last_construction >= _construction_rate:
+			if OS.get_ticks_msec() - _last_construction >= recipe.construction_time:
 				var can_make = true
 				
 				for ingredient in recipe.ingredients:
@@ -33,9 +31,11 @@ func _on_input_event(_viewport, event, _shape_idx):
 					for ingredient in recipe.ingredients:
 						warehouse.remove_item(ingredient, recipe.ingredients[ingredient])
 					
-					warehouse.add_item(recipe.recipe_name)
+					warehouse.add_item(recipe.recipe_name, recipe.item_yield)
 					
-					construction_response.text = "+1 %s" % recipe.recipe_name
+					construction_response.text = "+%d %s" % [recipe.item_yield, recipe.recipe_name]
+					
+					_last_construction = OS.get_ticks_msec()
 				else:
 					construction_response.text = "Not enough ingredients"
 					
@@ -43,4 +43,3 @@ func _on_input_event(_viewport, event, _shape_idx):
 					construction_response
 				)
 				
-				_last_construction = OS.get_ticks_msec()
